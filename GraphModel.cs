@@ -9,8 +9,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
+// Не закончено!
+
 namespace grafs
 {
+
     public class GraphModel : INotifyPropertyChanged
     {
         private List<GraphVert> gVerts;

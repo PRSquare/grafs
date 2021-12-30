@@ -59,6 +59,8 @@
     <Compile Include="AppModelView.cs" />
     <Compile Include="GraphModel.cs" />
     <Compile Include="GraphSaver.cs" />
+    <Compile Include="VisualGraphEdge.cs" />
+    <Compile Include="VisualGraphVert.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

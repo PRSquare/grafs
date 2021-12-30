@@ -11,11 +11,13 @@ namespace grafs
     {
         public static string ReadFile(String path)
         {
+            // Англ. формат записи чисел с  плавующей точкой (через точку, а не через запятую)
             System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
             if (path == "")
                 return null;
             StreamReader sr = new StreamReader(path);
-            string inLine = sr.ReadLine();
+            // Запись содержимого файла в буффер
+            string inLine = sr.ReadLine(); 
             string buff = null;
             while (inLine != null)
             {

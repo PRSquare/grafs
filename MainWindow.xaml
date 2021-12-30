@@ -8,6 +8,7 @@
         Title="Graph" Height="547" Width="899"
         KeyDown="key_events" KeyUp="key_events" ResizeMode="NoResize">
     <Grid>
+                        ё                                   <!-- Меню -->
         <Menu Name ="Menu" Margin="0,0,0,498">
             <MenuItem Header="File">
                 <MenuItem Header="Open">
@@ -31,7 +32,8 @@
                 <MenuItem Header="Об авторе" Click="about_aughtor"></MenuItem>
             </MenuItem>
         </Menu>
-
+        
+                                                    <!-- Проверхность для отрисовки графа -->
         <Canvas x:Name="GraphCanvas" Margin="10,42,481,78" Background="Gray" Width="400" Height="400" PreviewMouseDown="mouse_down_on_canvas" />
 
         <!--<DataGrid Background="Purple" Margin="419,43,188,205" ItemsSource="{Binding Colums}">
@@ -90,7 +92,8 @@
             </Table>
         </Grid> -->
 
-            <Grid Margin="710,27,0,10" Background="Green">
+                                                        <!-- Свойства вершины/ребра -->
+        <Grid Margin="710,27,0,10" Background="Green">
             <TextBox x:Name="ObjectName" Margin="10,10,10,429" TextChanged="obj_name_changed"></TextBox>
             <Grid Margin="10,59,10,0" Background="Orange">
                 <Grid x:Name="ObjectSettings">
@@ -100,6 +103,7 @@
             </Grid>
         </Grid>
 
+                                                        <!-- Панель инструментов -->
         <Button Name="Undo" Click='undo_button_clicked' Margin="419,370,358,119">Undo</Button>
         <Button x:Name="SelectVertexOrEdge" Click='select_vertex_or_edge_button_clicked' Margin="563,370,214,117" Content="Select vertex&#xD;&#xA;or edge"/>
         <Button Name="CreateVertex" Click='create_vertex_button_clicked' Margin="563,408,214,79">Create vertex</Button>

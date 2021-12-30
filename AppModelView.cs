@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
+// Не закончено!
+
 namespace grafs
 {
     public class AppModelView : INotifyPropertyChanged

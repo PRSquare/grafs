@@ -21,29 +21,18 @@ namespace grafs
 {
     public partial class MainWindow : Window
     {
-        //GraphsVisual gv;
 
         LinkedList<undoBuffer> UndoBuffers = new LinkedList<undoBuffer>();
 
         List<GraphVert> gVerts = new List<GraphVert>();
         List<GraphEdge> gEdges = new List<GraphEdge>();
 
-        AppModelView mw;
-
-        AjTable ajtab;
-
         public MainWindow()
         {
-            InitializeComponent();
-
-            ajtab = new AjTable();
-
-            DataContext = ajtab;
-            //mw = new AppModelView();
-            //DataContext = mw;
-            //this.DataContext = gv;
+            InitializeComponent(); // Инициализация окна
         }
-    
+        
+        // Метод открытия файла через диалоговое окно
         private String readFileFromOpenFileDialog() 
         {
             OpenFileDialog fd = new OpenFileDialog();
@@ -56,21 +45,18 @@ namespace grafs
             return buff;
         }
 
-        //LinkedList<List<GraphVert>> UndoBuffer = new LinkedList<List<GraphVert>>();
-
+        // Структура для хранения состояний графа
         struct undoBuffer 
         {
             public List<GraphVert> gVerts;
             public List<GraphEdge> gEdges;
         }
 
-        //enum ToolStates { VertexCreation, EdgeCreation, VertexSelection }
-        //ToolStates CurToolState = 
+
         delegate void ToolFunc(MouseButtonEventArgs e);
-        ToolFunc CurToolFunc = null;
+        ToolFunc CurToolFunc = null; // Делегат - текущий инструмент
 
-
-        public void PutInBuffer() 
+        public void PutInBuffer() // Запись в буффер состояний графа
         {
             List<GraphVert> addList = new List<GraphVert>();
             foreach (var vert in gVerts)
@@ -109,7 +95,7 @@ namespace grafs
                 UndoBuffers.RemoveFirst();
         }
 
-        private undoBuffer UndoGraph() 
+        private undoBuffer UndoGraph() // Фозврощение к предидущему состоянию
         {
             if (UndoBuffers.Count() > 0)
             {
@@ -124,7 +110,7 @@ namespace grafs
             }
         }
 
-        public void undo_button_clicked(Object sender, RoutedEventArgs e) 
+        public void undo_button_clicked(Object sender, RoutedEventArgs e)  // Нажатие кнопки Undo
         {
             undoBuffer newVerts;
             try
@@ -145,23 +131,23 @@ namespace grafs
             
         }
 
-        public void create_vertex_button_clicked(Object sender, RoutedEventArgs e) 
+        public void create_vertex_button_clicked(Object sender, RoutedEventArgs e) // Нажатие кнопки Create Vertex
         {
             CurToolFunc = vertexCreatrion;
         }
 
-        public void create_edge_button_clicked(Object sender, RoutedEventArgs e)
+        public void create_edge_button_clicked(Object sender, RoutedEventArgs e) // Нажатие кнопки Create Edge
         {
             CurToolFunc = edgesCreation;
         }
 
-        public void select_vertex_or_edge_button_clicked(Object sender, RoutedEventArgs e)
+        public void select_vertex_or_edge_button_clicked(Object sender, RoutedEventArgs e) // Нажатие кнопки Select
         {
             CurToolFunc = vertexSelection;
         }
         
 
-        private void inicEdges() 
+        private void inicEdges() // Инициализация рёбер
         {
             gEdges = genEdgesFromGraphVertList(gVerts);
             
@@ -176,7 +162,7 @@ namespace grafs
             }
         }
 
-        private List<GraphEdge> genEdgesFromGraphVertList(List<GraphVert> glist) 
+        private List<GraphEdge> genEdgesFromGraphVertList(List<GraphVert> glist) // Создание рёбер на основе списка вершин
         {
             List<GraphEdge> retEdges = new List<GraphEdge>();
             foreach (var gv in glist)
@@ -188,7 +174,7 @@ namespace grafs
             return retEdges;
         }
 
-        private void open_aj_mat_file(Object sender, RoutedEventArgs e)
+        private void open_aj_mat_file(Object sender, RoutedEventArgs e) // Импорт матрицы связности
         {
             String buff = readFileFromOpenFileDialog();
             if (buff != null) 
@@ -202,7 +188,7 @@ namespace grafs
             }
         }
 
-        private void open_inc_mat_file(Object sender, RoutedEventArgs e) 
+        private void open_inc_mat_file(Object sender, RoutedEventArgs e) // Импорт матрицы инциндентности
         {
             String buff = readFileFromOpenFileDialog();
             if (buff != null)
@@ -219,7 +205,7 @@ namespace grafs
             }
 }
 
-        private void open_graph_code_file(Object sender, RoutedEventArgs e)
+        private void open_graph_code_file(Object sender, RoutedEventArgs e) // Импорт списка вершин/рёбер
         {
             String buff = readFileFromOpenFileDialog();
             if (buff != null)
@@ -236,25 +222,7 @@ namespace grafs
             }
         } 
 
-        private void button_click(Object sender, RoutedEventArgs e) 
-        {
-            string buff = "";
-            foreach (var gv in gEdges) 
-            {
-                buff += gv.EdgeName + "[";
-                buff += gv.EdgeWeight.ToString() + "] ";
-                if (gv.IsDirected)
-                    buff += "(Directed): ";
-                else
-                    buff += "(Not directed): ";
-                buff += gv.Route.VertName + " => ";
-                buff += gv.ConnectedVert.VertName;
-                buff += "\n";
-            }
-            MessageBox.Show(buff);
-        }
-
-        public void obj_name_changed(object sender, TextChangedEventArgs e) 
+        public void obj_name_changed(object sender, TextChangedEventArgs e) // Изменение имени объекта
         {
             if(targetVert != null) 
             {
@@ -588,8 +556,6 @@ namespace grafs
             GraphCanvas.Children.Clear();
             UpdateEdges();
 
-            ajtab.GenTable(gVerts);
-
             foreach ( var gv in gVerts)
                 gv.VertVisual.AddOnCanv(GraphCanvas);
         }
@@ -674,6 +640,9 @@ namespace grafs
 
     }
 
+    // ===================================================================================================================================
+    // ========================================== Все, что находится далее не используется ===============================================
+    // ===================================================================================================================================
 
     class BaseViewModel : INotifyPropertyChanged 
     {

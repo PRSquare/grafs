@@ -7,20 +7,23 @@ using System.Windows;
 
 namespace grafs
 {
+    // Класс создания графа
     class GraphImport
     {
+        // Создание из матрицы смежности
         public static GraphVert[] CreateGraphFromAdjacentyMatrix(String adjMat)
         {
-            GraphVert[] retGraph;
-            Queue<String> lines = new Queue<String>(adjMat.Split('\n'));
+            GraphVert[] retGraph; // Переменная для записи графа
+            Queue<String> lines = new Queue<String>(adjMat.Split('\n')); // Строки
 
-            String line = lines.Dequeue();
-            Queue<String> names = new Queue<String>(line.Split(' '));
-            names.Dequeue();
-            retGraph = new GraphVert[names.Count];
-            int curArrayPosition = 0;
+            String line = lines.Dequeue(); // Убирание из очереди первой строки (строка с именами вершин)
+            Queue<String> names = new Queue<String>(line.Split(' ')); // Список имён вершин
+            names.Dequeue(); // Уничтожение первого (0)
+            retGraph = new GraphVert[names.Count]; // Установка кол-ва вершин в графе
+            int curArrayPosition = 0; // Текущая позиция в массиве
             foreach (var name in names)
             {
+                // Инициализация всех вершин
                 retGraph[curArrayPosition] = new GraphVert(name);
                 retGraph[curArrayPosition].VertVisual = new VisualGraphVert();
                 curArrayPosition++;
@@ -29,15 +32,17 @@ namespace grafs
             curArrayPosition = 0;
             foreach (var l in lines)
             {
+                // Построчное считывание строк матрицы
                 Queue<String> adjs = new Queue<String>(l.Split(' '));
-                string vertName = adjs.Dequeue();
+                string vertName = adjs.Dequeue(); // Имя вершины вначале строки
                 int pos = 0;
                 foreach (var adj in adjs)
                 {
                     if (adj != "0")
                     {
+                        // Если есть связь, то создаётся ребро
                         GraphEdge ge = new GraphEdge(retGraph[curArrayPosition], retGraph[pos]);
-                        ge.AddAdjacenty();
+                        ge.AddAdjacenty(); // Добавление ребра в вершину
                     }
                     ++pos;
                 }
@@ -47,11 +52,12 @@ namespace grafs
             return retGraph;
         }
 
+        // Создание из матрицы инцидентности
         public static GraphVert[] CreateGraphFromIncidenceMatrix(String incMatrix)
         {
             GraphVert[] retGraph;
 
-            LinkedList<String> lines = new LinkedList<String>(incMatrix.Split('\n'));
+            LinkedList<String> lines = new LinkedList<String>(incMatrix.Split('\n')); // Строки матрицы
 
             GraphEdge[] edges = null;
             int edgesCount = 0;
@@ -59,12 +65,13 @@ namespace grafs
             // Do auto namer
             char vertName = '1';
 
-            lines.RemoveLast();
+            lines.RemoveLast(); // Удаление последней пустой строки (перенос)
             int count = lines.Count();
 
             retGraph = new GraphVert[count];
             for (int i = 0; i < count; ++i)
             {
+                // Инициализация вершин
                 retGraph[i] = new GraphVert(vertName.ToString());
                 retGraph[i].VertVisual = new VisualGraphVert();
                 vertName++;
@@ -73,9 +80,11 @@ namespace grafs
             int strN = 0;
             foreach (var line in lines)
             {
-                Queue<String> qLine = new Queue<String>(line.Split(' '));
+                // Обход матрицы
+                Queue<String> qLine = new Queue<String>(line.Split(' ')); // Разделение строки матрицы
                 if (edges == null)
                 {
+                    // Инициализация edges, если не инициализированы
                     edgesCount = qLine.Count;
                     edges = new GraphEdge[edgesCount];
                     for (int i = 0; i < edgesCount; ++i)
@@ -88,8 +97,9 @@ namespace grafs
                 {
                     if (val != "0")
                     {
-                        edges[pos].AddVert(retGraph[strN]);
-                        edges[pos].EdgeWeight = Int32.Parse(val);
+                        // Если есть связь, то заносим её в соответсв. ребро
+                        edges[pos].AddVert(retGraph[strN]); // Функция, добавляющая значения на пустое место (Route либо ConnectedVert)
+                        edges[pos].EdgeWeight = Int32.Parse(val); // Считывание веса
                     }
                     ++pos;
                 }
@@ -99,64 +109,13 @@ namespace grafs
             for (int i = 0; i < edgesCount; ++i)
             {
                 edges[i].IsDirected = false;
-                edges[i].AddAdjacenty();
+                edges[i].AddAdjacenty(); // Запись ребра в ConnectedEdges соединённой вершины
             }
 
             return retGraph;
         }
 
-
-        class values
-        {
-            public String edgeName;
-            public int weight;
-            public String vert1Name;
-            public String vert2Name;
-
-            private int valNum;
-
-            public void Reset()
-            {
-                valNum = 0;
-            }
-            public void AddValue(String val)
-            {
-                switch (valNum)
-                {
-                    case 0:
-                        edgeName = val;
-                        break;
-                    case 1:
-                        weight = Int32.Parse(val);
-                        break;
-                    case 2:
-                        vert1Name = val;
-                        break;
-                    case 3:
-                        vert2Name = val;
-                        break;
-                }
-                valNum++;
-            }
-            public GraphVert[] CreateVerts()
-            {
-                GraphEdge GE = new GraphEdge();
-                GraphVert[] ret = new GraphVert[2];
-                ret[0] = new GraphVert(vert1Name);
-                ret[1] = new GraphVert(vert2Name);
-
-                ret[0].VertVisual = new VisualGraphVert();
-                ret[1].VertVisual = new VisualGraphVert();
-
-                GE.AddVert(ret[0]);
-                GE.AddVert(ret[1]);
-
-                GE.AddAdjacentyToRootVert();
-
-                return ret;
-            }
-        }
-
+        // Метод сканировани Edges
         private static List<GraphVert> scanEdges(List<GraphVert> vertList, string EVList) 
         {
             List<GraphVert> retVerts = vertList;
@@ -174,39 +133,41 @@ namespace grafs
                 {
                     if (curWord != "")
                     {
-                        edgeWeight = Int32.Parse(curWord);
+                        edgeWeight = Int32.Parse(curWord); // Считвание веса вершины
                         scanning = false;
                     }
                 }
                 switch (a)
                 {
                     case '(':
-
-                        scanning = true;
+                        // На следующем проходе запишнтся имя ребра
+                        scanning = true; 
 
                         edgeName = curWord;
                         lastWord = curWord;
                         curWord = "";
                         break;
                     case ')':
-
+                        // Создание ребра
                         scanning = false;
                         // Create vert
 
-                        GraphVert rootVert = retVerts.Find(x => x.VertName == lastWord);
+                        GraphVert rootVert = retVerts.Find(x => x.VertName == lastWord); // Поиск уже существующей начальной вершины
                         if (rootVert == null)
                         {
+                            // Создание, если не существует
                             retVerts.Add(new GraphVert(lastWord));
                             rootVert = retVerts.Last();
                         }
-                        GraphVert conVert = retVerts.Find(x => x.VertName == curWord);
+                        GraphVert conVert = retVerts.Find(x => x.VertName == curWord); //  Поиск уже существующей конечной вершины
                         if (conVert == null)
                         {
+                            // Создание, если не существует
                             retVerts.Add(new GraphVert(curWord));
                             conVert = retVerts.Last();
                         }
-                        GraphEdge ed = new GraphEdge(rootVert, conVert, edgeWeight, edgeName);
-                        ed.AddAdjacenty();
+                        GraphEdge ed = new GraphEdge(rootVert, conVert, edgeWeight, edgeName); // Создание ребра
+                        ed.AddAdjacenty(); // Присоединение ребра к вершине
 
 
                         lastWord = curWord;
@@ -233,6 +194,7 @@ namespace grafs
                         curWord = "";
                         break;
                     default:
+                        // Запись символа к последнему слову
                         curWord += a;
                         break;
                 }
@@ -240,12 +202,13 @@ namespace grafs
             return retVerts;
         }
 
+        // Класс координат вершины
         private class Cords 
         {
             private double x;
             private double y;
             private short state = 0;
-            public void addValue(double value) 
+            public void addValue(double value) // Метод присваивает значение не инициализированной координате
             {
                 switch (state) 
                 {
@@ -266,6 +229,7 @@ namespace grafs
 
         }
 
+        // Метод сканирования Vertex
         private static GraphVert scanVert(string EVList) 
         {
             GraphVert retVert = null;
@@ -286,19 +250,19 @@ namespace grafs
 
                         scanning = true;
 
-                        vertName = curWord;
+                        vertName = curWord; // Запись имени вершины
                         lastWord = curWord;
                         curWord = "";
                         break;
                     case ')':
-
+                        // Создание вершины
                         scanning = false;
                         // Create vert
 
-                        vertCords.addValue(double.Parse(curWord));
-                        
+                        vertCords.addValue(double.Parse(curWord)); // Запись координаты
+
                         retVert = new GraphVert(vertName);
-                        retVert.VertVisual.SetPos(vertCords.X(), vertCords.Y());
+                        retVert.VertVisual.SetPos(vertCords.X(), vertCords.Y()); // Установка координат
 
 
                         lastWord = curWord;
@@ -310,11 +274,11 @@ namespace grafs
                         curWord = "";
                         break;
                     case '}':
-                        return retVert;
+                        return retVert; // Возвращение вершины
 
                     case ',':
                         lastWord = curWord;
-                        vertCords.addValue(double.Parse(curWord));
+                        vertCords.addValue(double.Parse(curWord)); // Запись координаты
                         curWord = "";
                         break;
                     case '\t':
@@ -329,6 +293,7 @@ namespace grafs
             return retVert;
         }
 
+        // Метод создания графа из списка рёбер/вершин
         public static GraphVert[] CreateGraphGromEdgVertList(string EVList)
         {
             List<GraphVert> retVerts = new List<GraphVert>();
@@ -341,26 +306,15 @@ namespace grafs
 
             bool isComment = false;
 
-            string edgeName = "Edge";
-            int edgeWeight = 1;
-
-            bool scanning = false;
-
             for (int i = 0; i < EVList.Length; ++i)
             {
                 if (isComment) 
                 {
+                    // Если комментарий - пропускаем
                     if (EVList[i] != '\n')
                         continue;
                     isComment = false;
-                }
-                if (scanning == true)
-                {
-                    if(curWord != "")
-                    {
-                        edgeWeight = Int32.Parse(curWord);
-                        scanning = false;
-                    }    
+
                 }
                 switch (EVList[i])
                 {
@@ -368,9 +322,9 @@ namespace grafs
                         figBrState++;
 
                         lastWord = curWord;
-                        if (lastWord == "Vertex") 
+                        if (lastWord == "Vertex") // Если Vertex начинаем считывать 
                             retVerts.Add(scanVert(EVList.Substring(i)));
-                        if (lastWord == "Edges")
+                        if (lastWord == "Edges") // Если Edges начинаем считывать
                             retVerts = scanEdges(retVerts, EVList.Substring(i));
                         curWord = "";
                         break;
