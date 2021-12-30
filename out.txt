@@ -1,0 +1,17 @@
+Vertex{A(300, 200)}
+Vertex{B(250.045968900821, 286.575983949234)}
+Vertex{D(100.000126827246, 200.159265291649)}
+Vertex{E(343, 107)}
+Vertex{F(249.769944376369, 113.265043743753)}
+Edges
+{
+	Edge(1, B, A),
+	Edge(1, F, A),
+	Edge(1, B, A),
+	Edge(1, F, B),
+	Edge(1, F, D),
+	EdgeSupra(1, E, A),
+	Edge(1, F, A),
+	Edge(1, F, B),
+	Edge(1, F, D)
+}

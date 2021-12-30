@@ -1,0 +1,26 @@
+Vertex{A(298, 211)}
+Vertex{B(250.045968900821, 286.575983949234)}
+Vertex{C(150.091980064438, 286.655580005627)}
+Vertex{D(100.000126827246, 200.159265291649)}
+Vertex{E(149.816209077769, 113.50383171103)}
+Vertex{F(249.769944376369, 113.265043743753)}
+Edges
+{
+	Edge(1, B, A),
+	Edge(1, E, A),
+	Edge(1, F, A),
+	Edge(1, A, A),
+	Edge(1, B, A),
+	Edge(1, C, B),
+	Edge(1, F, B),
+	Edge(1, C, B),
+	Edge(1, D, C),
+	Edge(1, E, C),
+	Edge(1, D, C),
+	Edge(1, F, D),
+	Edge(1, E, A),
+	Edge(1, E, C),
+	Edge(1, F, A),
+	Edge(1, F, B),
+	Edge(1, F, D)
+}

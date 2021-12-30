@@ -1,0 +1,99 @@
+﻿<Window x:Class="grafs.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:grafs"
+        mc:Ignorable="d"
+        Title="Graph" Height="547" Width="899"
+        KeyDown="key_events" KeyUp="key_events" ResizeMode="NoResize">
+    <Grid>
+        <Menu Name ="Menu" Margin="0,0,0,498">
+            <MenuItem Header="File">
+                <MenuItem Header="Open">
+                    <!--<MenuItem Header="Adjacenty Matrix" Command="{Binding OpenAjMatFile}"></MenuItem>
+                    <MenuItem Header="Incidence Matrix" Command="{Binding OpenIncMatFile}"></MenuItem>
+                    <MenuItem Header="Graph Code File" Command="{Binding OpenGraphCodeFile}"></MenuItem>-->
+
+                    <MenuItem Header="Adjacenty Matrix" Click="open_aj_mat_file"></MenuItem>
+                    <MenuItem Header="Incidence Matrix" Click="open_inc_mat_file"></MenuItem>
+                    <MenuItem Header="Graph Code File" Click="open_graph_code_file"></MenuItem>
+                </MenuItem>
+                <MenuItem Header="Save">
+                    <MenuItem Header="As Adjacenty Matrix" Click="save_aj_mat_file"></MenuItem>
+                    <MenuItem Header="As Incidence Matrix" Click="save_inc_mat_file"></MenuItem>
+                    <MenuItem Header="As Graph Code File" Click="save_graph_code_file"></MenuItem>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="Задачи теории графов"/>
+            <MenuItem Header="?">
+                <MenuItem Header="О программе" Click="about_program"></MenuItem>
+                <MenuItem Header="Об авторе" Click="about_aughtor"></MenuItem>
+            </MenuItem>
+        </Menu>
+
+        <Canvas x:Name="GraphCanvas" Margin="10,42,481,78" Background="Gray" Width="400" Height="400" PreviewMouseDown="mouse_down_on_canvas" />
+        
+        <!--<local:DrawIt Width="100" Height="100"/>-->
+        <!-- 10,42,481,78 -->
+        <!--<Canvas Margin="10,42,481,78" Background="Gray">
+            <ItemsControl DataContext="{Binding Path=Graph}" ItemsSource="{Binding ObsGVerts}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Ellipse Width="10" Height="10" Fill="Yellow">
+                            <Ellipse.Triggers>
+                                <EventTrigger Event="MouseDown">
+                                    <EventTrigger.Actions >
+                                        
+                                    </EventTrigger.Actions>
+                                </EventTrigger>
+                            </Ellipse.Triggers>
+                            <Ellipse.RenderTransform>
+                                <TranslateTransform  X="{Binding x}" Y="{Binding y}"/>
+                            </Ellipse.RenderTransform>
+                        </Ellipse>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <ItemsControl DataContext="{Binding Path=Graph}" ItemsSource="{Binding ObsGVerts}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Ellipse Width="10" Height="10" Fill="Yellow">
+                            <Ellipse.RenderTransform>
+                                <TranslateTransform  X="{Binding x}" Y="{Binding y}"/>
+                            </Ellipse.RenderTransform>
+                        </Ellipse>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Canvas>-->
+        
+
+
+        <!-- 419,43,188,205 
+        <Grid>
+            
+            <Table x:Name="AjMat" Background="Purple" Margin="419,43,188,205">
+                <Table.Resources>
+                    
+                </Table.Resources>
+            </Table>
+        </Grid> -->
+
+            <Grid Margin="710,27,0,10" Background="Green">
+            <TextBox x:Name="ObjectName" Margin="10,10,10,429" TextChanged="obj_name_changed"></TextBox>
+            <Grid Margin="10,59,10,0" Background="Orange">
+                <Grid x:Name="ObjectSettings">
+
+                </Grid>
+                <TextBlock x:Name="ObjectDescription" Margin="9,71,10,10"></TextBlock>
+            </Grid>
+        </Grid>
+
+        <Button Name="Undo" Click='undo_button_clicked' Margin="419,370,358,119">Undo</Button>
+        <Button x:Name="SelectVertexOrEdge" Click='select_vertex_or_edge_button_clicked' Margin="563,370,214,117" Content="Select vertex&#xD;&#xA;or edge"/>
+        <Button Name="CreateVertex" Click='create_vertex_button_clicked' Margin="563,408,214,79">Create vertex</Button>
+        <Button Name="CreateEdge" Click='create_edge_button_clicked' Margin="563,446,214,41">Create edge</Button>
+        <!--<Button Name="Button" Margin="419,406,358,78" Command="{Binding ShowSmth}" CommandParameter="0">Button</Button>-->
+    </Grid>
+</Window>
