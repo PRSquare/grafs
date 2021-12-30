@@ -21,7 +21,7 @@
                 </MenuItem>
                 <MenuItem Header="Save">
                     <MenuItem Header="As Adjacenty Matrix" Click="save_aj_mat_file"></MenuItem>
-                    <MenuItem Header="As Incidence Matrix" Click="save_inc_mat_file"></MenuItem>
+                    <!--<MenuItem Header="As Incidence Matrix" Click="save_inc_mat_file"></MenuItem>-->
                     <MenuItem Header="As Graph Code File" Click="save_graph_code_file"></MenuItem>
                 </MenuItem>
             </MenuItem>
@@ -33,6 +33,16 @@
         </Menu>
 
         <Canvas x:Name="GraphCanvas" Margin="10,42,481,78" Background="Gray" Width="400" Height="400" PreviewMouseDown="mouse_down_on_canvas" />
+
+        <!--<DataGrid Background="Purple" Margin="419,43,188,205" ItemsSource="{Binding Colums}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Path=Name}">
+                    <DataGridTextColumn.Header>
+                        <TextBlock Text="{Binding Name}"></TextBlock>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>-->
         
         <!--<local:DrawIt Width="100" Height="100"/>-->
         <!-- 10,42,481,78 -->

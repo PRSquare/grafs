@@ -29,10 +29,16 @@ namespace grafs
         List<GraphEdge> gEdges = new List<GraphEdge>();
 
         AppModelView mw;
+
+        AjTable ajtab;
+
         public MainWindow()
         {
             InitializeComponent();
 
+            ajtab = new AjTable();
+
+            DataContext = ajtab;
             //mw = new AppModelView();
             //DataContext = mw;
             //this.DataContext = gv;
@@ -164,7 +170,6 @@ namespace grafs
                 GraphEdge multipEdge = gEdges.Find(x => { return x != edge && x.Route == edge.Route && x.ConnectedVert == edge.ConnectedVert && x.Visual.EdgeNumber == edge.Visual.EdgeNumber; });
                 while( multipEdge != null) 
                 {
-                    MessageBox.Show(multipEdge.Visual.EdgeNumber + " " + edge.Visual.EdgeNumber);
                     multipEdge.Visual.EdgeNumber++;
                     multipEdge = gEdges.Find(x => { return x != edge && x.Route == edge.Route && x.ConnectedVert == edge.ConnectedVert && x.Visual.EdgeNumber == edge.Visual.EdgeNumber; });
                 }
@@ -188,23 +193,47 @@ namespace grafs
             String buff = readFileFromOpenFileDialog();
             if (buff != null) 
             {
-                GraphVert[] verts = GraphImport.CreateGraphFromAdjacentyMatrix(buff);
-                Update(verts);
+                try {
+                    GraphVert[] verts = GraphImport.CreateGraphFromAdjacentyMatrix(buff);
+                    Update(verts);
+                } catch (Exception ex) {
+                    MessageBox.Show("Wrong format");
+                }
             }
         }
 
         private void open_inc_mat_file(Object sender, RoutedEventArgs e) 
         {
             String buff = readFileFromOpenFileDialog();
-            GraphVert[] verts = GraphImport.CreateGraphFromIncidenceMatrix(buff);
-            Update(verts);
-        }
+            if (buff != null)
+            {
+                try
+                {
+                    GraphVert[] verts = GraphImport.CreateGraphFromIncidenceMatrix(buff);
+                    Update(verts);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Wrong format");
+                }
+            }
+}
 
         private void open_graph_code_file(Object sender, RoutedEventArgs e)
         {
             String buff = readFileFromOpenFileDialog();
-            GraphVert[] verts = GraphImport.CreateGraphGromEdgVertList(buff);
-            Update(verts);
+            if (buff != null)
+            {
+                try
+                {
+                    GraphVert[] verts = GraphImport.CreateGraphGromEdgVertList(buff);
+                    Update(verts);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Wrong format");
+                }
+            }
         } 
 
         private void button_click(Object sender, RoutedEventArgs e) 
@@ -559,37 +588,51 @@ namespace grafs
             GraphCanvas.Children.Clear();
             UpdateEdges();
 
+            ajtab.GenTable(gVerts);
+
             foreach ( var gv in gVerts)
                 gv.VertVisual.AddOnCanv(GraphCanvas);
         }
 
         private void UpdateEdges() 
         {
+            List<GraphEdge> removalList = new List<GraphEdge>();
             foreach ( var ge in gEdges )
             {
+                if(!gVerts.Exists( x => { return x == ge.Route || x == ge.ConnectedVert; })) 
+                {
+                    removalList.Add(ge);
+                    continue;
+                }
                 ge.UpdateCords();
                 ge.Visual.AddOnCanvas(GraphCanvas);
             }
-        }
-
-        private void Window_KeyUp(object sender, KeyEventArgs e)
-        {
-
+            foreach (var edge in removalList) 
+                gEdges.Remove(edge);
         }
 
         public void save_graph_code_file(Object sender, RoutedEventArgs e)
         {
-            GraphSaver.SaveGraphCodeFile("../../outgc.txt", gVerts);
+            OpenFileDialog fd = new OpenFileDialog();
+            fd.Filter = "txt|*.txt";
+            if(fd.ShowDialog() == true)
+                GraphSaver.SaveGraphCodeFile(fd.FileName, gVerts, gEdges);
         }
 
         public void save_aj_mat_file(Object sender, RoutedEventArgs e)
         {
-            GraphSaver.SaveAjacentyMatFile("../../outaj.txt", gVerts);
+            OpenFileDialog fd = new OpenFileDialog();
+            fd.Filter = "txt|*.txt";
+            if (fd.ShowDialog() == true)
+                GraphSaver.SaveAjacentyMatFile(fd.FileName, gVerts);
         }
 
         public void save_inc_mat_file(Object sender, RoutedEventArgs e)
         {
-            GraphSaver.SaveIncMatFile("../../outinc.txt", gVerts, gEdges);
+            OpenFileDialog fd = new OpenFileDialog();
+            fd.Filter = "txt|*.txt";
+            if (fd.ShowDialog() == true)
+                GraphSaver.SaveIncMatFile(fd.FileName, gVerts, gEdges);
         }
 
 
@@ -601,7 +644,7 @@ namespace grafs
 
         public void about_aughtor(Object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Программа создана студентом НИУ МАИ\n8 Факультет. Кафедра 31_.\nГруппа М8О-310Б-19.\nЛозница Иван Петрович\n2021 год.");
+            MessageBox.Show("Программа создана студентами НИУ МАИ\n8 Факультет. Кафедра 31_.\nГруппа М8О-310Б-19.\nЛозница Иван, Смирнов Олег\n2021 год.");
         }
     }
 
@@ -640,6 +683,121 @@ namespace grafs
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+    }
+
+    class obsCollection : BaseViewModel 
+    {
+        private ObservableCollection<string> _names;
+        public ObservableCollection<string> Names
+        {
+            get { return _names; }
+            set
+            {
+                _names = value;
+                OnPropertyChanged("Names");
+            }
+        }
+        public obsCollection() 
+        {
+            Names = new ObservableCollection<string>();
+        }
+        public obsCollection(List<string> str)
+        {
+            Names = new ObservableCollection<string>(str);
+        }
+    }
+
+    class GridValue : BaseViewModel
+    {
+        private string _value;
+        public string Value
+        {
+            get { return _value; }
+            set
+            {
+                _value = value;
+                OnPropertyChanged("Name");
+            }
+        }
+        public GridValue( string val) 
+        {
+            Value = val;
+        }
+    }
+    class MyColum : BaseViewModel
+    {
+        private string _name;
+        public string Name 
+        {
+            get { return _name; }
+            set 
+            {
+                _name = value;
+                OnPropertyChanged("Name");
+            }
+        }
+        private ObservableCollection<GridValue> _vals;
+        public ObservableCollection<GridValue> Vals
+        {
+            get { return _vals; }
+            set
+            {
+                _vals = value;
+                OnPropertyChanged("Vals");
+            }
+        }
+
+        public MyColum() 
+        {
+            Vals = new ObservableCollection<GridValue>();
+        }
+        public MyColum(string name)
+        {
+            Name = name;
+            Vals = new ObservableCollection<GridValue>();
+        }
+
+    }
+
+    class AjTable : BaseViewModel 
+    {
+        // private ObservableCollection<obsCollection> _lines;
+        private ObservableCollection<MyColum> _colums;
+
+        /*public ObservableCollection< obsCollection > Lines
+        {
+            get { return _lines; }
+            set
+            {
+                _lines = value;
+                OnPropertyChanged("Lines");
+            }
+        }*/
+        public ObservableCollection<MyColum> Colums
+        {
+            get { return _colums; }
+            set
+            {
+                _colums = value;
+                OnPropertyChanged("Colums");
+            }
+        }
+
+        public AjTable() 
+        {
+            //Lines = new ObservableCollection<obsCollection>();
+            Colums = new ObservableCollection<MyColum>();
+        }
+
+        public void GenTable(List<GraphVert> verts) 
+        {
+            Colums.Clear();
+            MyColum col = new MyColum("0");
+            foreach (var vert in verts)
+                col.Vals.Add(new GridValue(vert.VertName));
+            Colums.Add(col);
+        }
+        
     }
 
     class GraphsVisual : BaseViewModel

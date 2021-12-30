@@ -142,7 +142,7 @@ namespace grafs
 
         ~GraphEdge()
         {
-            Route.ConnectedEdges.Remove(this);
+            Route?.ConnectedEdges?.Remove(this);
         }
 
         public void RemoveFromRoute() 

@@ -9,7 +9,7 @@ namespace grafs
 {
     class GraphSaver
     {
-        public static void SaveGraphCodeFile(string path, List<GraphVert> graph) 
+        public static void SaveGraphCodeFile(string path, List<GraphVert> graph, List<GraphEdge> edges) 
         {
             System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
             StreamWriter sw = new StreamWriter(path);
@@ -19,17 +19,20 @@ namespace grafs
             }
             sw.WriteLine("Edges\n{");
             bool first = true;
-            foreach (var vert in graph) 
+            foreach (var edge in edges) 
             {
-                foreach (var edge in vert.ConnectedEdges) 
+                if (first)
+                    first = false;
+                else
+                    sw.Write(",\n");
+                sw.Write("\t" + edge.EdgeName + "(" + edge.EdgeWeight.ToString() + ", " + edge.Route.VertName + ", " + edge.ConnectedVert.VertName + ")");
+                if (!edge.IsDirected) 
                 {
-                    if (first)
-                        first = false;
-                    else
-                        sw.Write(",\n");
-                    sw.Write("\t" + edge.EdgeName + "(" + edge.EdgeWeight.ToString() + ", " + edge.Route.VertName + ", " + edge.ConnectedVert.VertName + ")");
+                    sw.Write(",\n");
+                    sw.Write("\t" + edge.EdgeName + "(" + edge.EdgeWeight.ToString() + ", " + edge.ConnectedVert.VertName + ", " + edge.Route.VertName + ")");
                 }
             }
+
             sw.WriteLine("\n}");
             sw.Flush();
             sw.Close();
